@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api_gateway/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: services/scheduler/Dockerfile
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - CAPACITY_MANAGER_URL=http://capacity-manager:8001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+      - capacity-manager
+
+  capacity-manager:
+    build:
+      context: .
+      dockerfile: services/capacity_manager/Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - SF_API_KEY=${SF_API_KEY}
+      - SF_API_URL=${SF_API_URL}
+
+  runtime-agent:
+    build:
+      context: .
+      dockerfile: services/runtime_agent/Dockerfile
+    ports:
+      - "8002:8002"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+
+  billing:
+    build:
+      context: .
+      dockerfile: services/billing/Dockerfile
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+
+  forecasting:
+    build:
+      context: .
+      dockerfile: services/forecasting/Dockerfile
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - SF_API_KEY=${SF_API_KEY}
+      - SF_API_URL=${SF_API_URL}
+
