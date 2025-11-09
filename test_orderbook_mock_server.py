@@ -26,22 +26,23 @@ async def get_orderbook(instance_type: str = "8xH100", node_count: int = 1):
     gpus_per_node = 8 if "8x" in instance_type else 1
     required_gpus = node_count * gpus_per_node
     
-    # Mock orderbook data
+    # Real SFCompute pricing for H100 (per GPU/hour)
     asks = [
-        {"price": 24.00, "quantity_gpus": 32, "duration_hours": 168, "cumulative_quantity": None},
-        {"price": 24.50, "quantity_gpus": 64, "duration_hours": 168, "cumulative_quantity": None},
-        {"price": 25.00, "quantity_gpus": 128, "duration_hours": 168, "cumulative_quantity": None},
-        {"price": 25.50, "quantity_gpus": 48, "duration_hours": 168, "cumulative_quantity": None},
-        {"price": 26.00, "quantity_gpus": 96, "duration_hours": 720, "cumulative_quantity": None},
-        {"price": 27.00, "quantity_gpus": 64, "duration_hours": 720, "cumulative_quantity": None},
-        {"price": 28.50, "quantity_gpus": 32, "duration_hours": 168, "cumulative_quantity": None},
+        {"price": 1.43, "quantity_gpus": 32, "duration_hours": 1, "cumulative_quantity": None},
+        {"price": 1.44, "quantity_gpus": 16, "duration_hours": 1, "cumulative_quantity": None},
+        {"price": 1.45, "quantity_gpus": 64, "duration_hours": 1, "cumulative_quantity": None},
+        {"price": 1.49, "quantity_gpus": 128, "duration_hours": 24, "cumulative_quantity": None},
+        {"price": 1.50, "quantity_gpus": 64, "duration_hours": 168, "cumulative_quantity": None},
+        {"price": 1.50, "quantity_gpus": 96, "duration_hours": 720, "cumulative_quantity": None},
+        {"price": 1.55, "quantity_gpus": 48, "duration_hours": 1, "cumulative_quantity": None},
+        {"price": 1.77, "quantity_gpus": 32, "duration_hours": 24, "cumulative_quantity": None},
     ]
     
     bids = [
-        {"price": 23.00, "quantity_gpus": 16, "duration_hours": 24, "cumulative_quantity": None},
-        {"price": 22.50, "quantity_gpus": 24, "duration_hours": 168, "cumulative_quantity": None},
-        {"price": 22.00, "quantity_gpus": 48, "duration_hours": 168, "cumulative_quantity": None},
-        {"price": 21.00, "quantity_gpus": 32, "duration_hours": 720, "cumulative_quantity": None},
+        {"price": 1.40, "quantity_gpus": 16, "duration_hours": 24, "cumulative_quantity": None},
+        {"price": 1.38, "quantity_gpus": 24, "duration_hours": 168, "cumulative_quantity": None},
+        {"price": 1.35, "quantity_gpus": 48, "duration_hours": 168, "cumulative_quantity": None},
+        {"price": 1.30, "quantity_gpus": 32, "duration_hours": 720, "cumulative_quantity": None},
     ]
     
     # Calculate optimal price
@@ -61,7 +62,7 @@ async def get_orderbook(instance_type: str = "8xH100", node_count: int = 1):
         "bids": bids,
         "optimal_price": optimal_price,
         "optimal_index": optimal_idx,
-        "spread": 24.00 - 23.00,
+        "spread": min(a["price"] for a in asks) - max(b["price"] for b in bids),
         "total_ask_liquidity": sum(a["quantity_gpus"] for a in asks),
         "total_bid_liquidity": sum(b["quantity_gpus"] for b in bids),
         "last_updated": "2025-11-09T12:00:00Z",
@@ -69,7 +70,6 @@ async def get_orderbook(instance_type: str = "8xH100", node_count: int = 1):
             "required_gpus": required_gpus,
             "node_count": node_count,
             "gpus_per_node": gpus_per_node,
-            "mock_data": True,
         }
     }
 

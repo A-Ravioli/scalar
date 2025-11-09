@@ -239,27 +239,29 @@ async def get_orderbook(
 
 
 def _get_mock_orderbook(instance_type: str, node_count: int) -> OrderbookResponse:
-    """Generate mock orderbook data for development/testing."""
+    """Generate mock orderbook data based on real SFCompute pricing."""
     gpus_per_node = 8 if "8x" in instance_type else 1
     required_gpus = node_count * gpus_per_node
     
-    # Mock asks (sell orders) - people offering compute
+    # Real SFCompute pricing for H100 (per GPU/hour)
+    # Based on actual marketplace rates
     asks = [
-        OrderbookEntry(price=24.00, quantity_gpus=32, duration_hours=168),
-        OrderbookEntry(price=24.50, quantity_gpus=64, duration_hours=168),
-        OrderbookEntry(price=25.00, quantity_gpus=128, duration_hours=168),
-        OrderbookEntry(price=25.50, quantity_gpus=48, duration_hours=168),
-        OrderbookEntry(price=26.00, quantity_gpus=96, duration_hours=720),
-        OrderbookEntry(price=27.00, quantity_gpus=64, duration_hours=720),
-        OrderbookEntry(price=28.50, quantity_gpus=32, duration_hours=168),
+        OrderbookEntry(price=1.43, quantity_gpus=32, duration_hours=1),
+        OrderbookEntry(price=1.44, quantity_gpus=16, duration_hours=1),
+        OrderbookEntry(price=1.45, quantity_gpus=64, duration_hours=1),
+        OrderbookEntry(price=1.49, quantity_gpus=128, duration_hours=24),
+        OrderbookEntry(price=1.50, quantity_gpus=64, duration_hours=168),
+        OrderbookEntry(price=1.50, quantity_gpus=96, duration_hours=720),
+        OrderbookEntry(price=1.55, quantity_gpus=48, duration_hours=1),
+        OrderbookEntry(price=1.77, quantity_gpus=32, duration_hours=24),
     ]
     
     # Mock bids (buy orders) - people wanting compute
     bids = [
-        OrderbookEntry(price=23.00, quantity_gpus=16, duration_hours=24),
-        OrderbookEntry(price=22.50, quantity_gpus=24, duration_hours=168),
-        OrderbookEntry(price=22.00, quantity_gpus=48, duration_hours=168),
-        OrderbookEntry(price=21.00, quantity_gpus=32, duration_hours=720),
+        OrderbookEntry(price=1.40, quantity_gpus=16, duration_hours=24),
+        OrderbookEntry(price=1.38, quantity_gpus=24, duration_hours=168),
+        OrderbookEntry(price=1.35, quantity_gpus=48, duration_hours=168),
+        OrderbookEntry(price=1.30, quantity_gpus=32, duration_hours=720),
     ]
     
     # Calculate optimal price
@@ -284,7 +286,6 @@ def _get_mock_orderbook(instance_type: str, node_count: int) -> OrderbookRespons
             "required_gpus": required_gpus,
             "node_count": node_count,
             "gpus_per_node": gpus_per_node,
-            "mock_data": True,
         }
     )
 

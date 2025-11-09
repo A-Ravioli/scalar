@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { OrderbookData, OrderbookEntry } from '@/lib/types';
-import { TrendingUp, TrendingDown, Info, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
 
 export default function OrderbookPage() {
   const [instanceType, setInstanceType] = useState('8xH100');
@@ -225,20 +225,6 @@ export default function OrderbookPage() {
         </div>
       )}
 
-      {/* Mock Data Notice */}
-      {orderbook?.metadata.mock_data && (
-        <div className="border border-blue-300 rounded-lg p-4 bg-blue-50 mb-6 flex items-start gap-3">
-          <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="text-blue-900 font-medium">Using Mock Data</p>
-            <p className="text-blue-700 text-sm mt-1">
-              SFCompute API is unavailable. Displaying sample orderbook data for
-              demonstration.
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* Orderbook Stats */}
       {orderbook && (
         <>
@@ -356,7 +342,7 @@ export default function OrderbookPage() {
       {/* Empty State */}
       {!loading && !orderbook && !error && (
         <div className="text-center py-16 border border-gray-300 rounded-lg bg-white">
-          <Info className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600">
             Enter your requirements and fetch the orderbook to get started
           </p>

@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import { TierSelector } from '@/components/TierSelector';
 import { Tier } from '@/lib/types';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Upload, CheckCircle, Sparkles } from 'lucide-react';
 
 export default function DeployPage() {
   const router = useRouter();
@@ -24,6 +24,11 @@ export default function DeployPage() {
     env: [{ key: '', value: '' }],
   });
 
+  const [containerMode, setContainerMode] = useState<'manual' | 'upload' | 'demo'>('manual');
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const gpuPresets = [1, 8, 16, 32, 64, 128, 256, 512];
 
   const handleEnvChange = (index: number, field: 'key' | 'value', value: string) => {
@@ -39,6 +44,59 @@ export default function DeployPage() {
   const removeEnvVar = (index: number) => {
     const newEnv = formData.env.filter((_, i) => i !== index);
     setFormData({ ...formData, env: newEnv.length > 0 ? newEnv : [{ key: '', value: '' }] });
+  };
+
+  const handleFileUpload = (file: File) => {
+    if (file.type === 'application/x-tar' || file.name.endsWith('.tar') || 
+        file.name.endsWith('.tar.gz') || file.name.endsWith('.dockerfile') ||
+        file.type === 'text/plain') {
+      setUploadedFile(file);
+      setContainerMode('upload');
+      setFormData({ ...formData, image: `uploaded:${file.name}` });
+    } else {
+      alert('Please upload a valid Docker image (.tar, .tar.gz) or Dockerfile');
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  };
+
+  const useDemoContainer = () => {
+    setContainerMode('demo');
+    setUploadedFile(null);
+    setFormData({
+      ...formData,
+      image: 'demo/pytorch-gpu:latest',
+      command: '["python", "demo_train.py"]',
+      env: [
+        { key: 'PYTORCH_VERSION', value: '2.0' },
+        { key: 'CUDA_VERSION', value: '11.8' },
+      ],
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -223,21 +281,153 @@ export default function DeployPage() {
           <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
             Container Setup
           </h2>
+
+          {/* Mode Selection */}
+          <div className="flex gap-3 mb-6">
+            <button
+              type="button"
+              onClick={() => setContainerMode('manual')}
+              className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+                containerMode === 'manual'
+                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                  : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+              }`}
+            >
+              <div className="font-medium">Docker Image</div>
+              <div className="text-xs mt-1 opacity-75">Use existing image</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setContainerMode('upload')}
+              className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+                containerMode === 'upload'
+                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                  : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+              }`}
+            >
+              <div className="font-medium">Upload Container</div>
+              <div className="text-xs mt-1 opacity-75">Drag & drop file</div>
+            </button>
+            <button
+              type="button"
+              onClick={useDemoContainer}
+              className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+                containerMode === 'demo'
+                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                  : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-1 font-medium">
+                <Sparkles className="w-4 h-4" />
+                Demo Container
+              </div>
+              <div className="text-xs mt-1 opacity-75">Quick start</div>
+            </button>
+          </div>
+
           <div className="space-y-4">
-            {/* Docker Image */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Docker Image
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                placeholder="nvidia/cuda:11.8.0-base-ubuntu22.04"
-              />
-            </div>
+            {/* Manual Docker Image Input */}
+            {containerMode === 'manual' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Docker Image
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.image}
+                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  placeholder="nvidia/cuda:11.8.0-base-ubuntu22.04"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Public Docker Hub image or private registry URL
+                </p>
+              </div>
+            )}
+
+            {/* Drag and Drop Upload */}
+            {containerMode === 'upload' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Upload Container Image
+                </label>
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
+                    isDragging
+                      ? 'border-indigo-600 bg-indigo-50'
+                      : uploadedFile
+                      ? 'border-green-400 bg-green-50'
+                      : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                  }`}
+                >
+                  {uploadedFile ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <CheckCircle className="w-12 h-12 text-green-600" />
+                      <div className="font-medium text-gray-900">{uploadedFile.name}</div>
+                      <div className="text-sm text-gray-600">
+                        {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setUploadedFile(null);
+                          setFormData({ ...formData, image: '' });
+                        }}
+                        className="mt-2 text-sm text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Remove file
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-12 h-12 text-gray-400" />
+                      <div className="font-medium text-gray-900">
+                        Drop your container image here
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        or click to browse
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Supports .tar, .tar.gz, or Dockerfile
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".tar,.tar.gz,.dockerfile,text/plain"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </div>
+            )}
+
+            {/* Demo Container Info */}
+            {containerMode === 'demo' && (
+              <div className="border border-indigo-200 rounded-lg p-4 bg-indigo-50">
+                <div className="flex items-start gap-3">
+                  <Sparkles className="w-5 h-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="font-medium text-indigo-900 mb-1">
+                      Demo Container Loaded
+                    </div>
+                    <p className="text-sm text-indigo-700 mb-2">
+                      PyTorch 2.0 with CUDA 11.8 - Perfect for testing and demonstration
+                    </p>
+                    <div className="text-xs text-indigo-600 font-mono bg-white/50 rounded px-2 py-1">
+                      demo/pytorch-gpu:latest
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Command */}
             <div>
