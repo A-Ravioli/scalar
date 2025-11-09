@@ -77,7 +77,7 @@ export default function Home() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="border border-gray-300 rounded-lg p-6 bg-white">
+        <div className="rounded-xl p-6 bg-gray-50">
           <div className="flex items-center gap-3 mb-2">
             <Activity className="w-5 h-5 text-indigo-600" />
             <h3 className="text-sm font-medium text-gray-600">Running Apps</h3>
@@ -86,7 +86,7 @@ export default function Home() {
             {loading ? '-' : stats.runningApps}
           </p>
         </div>
-        <div className="border border-gray-300 rounded-lg p-6 bg-white">
+        <div className="rounded-xl p-6 bg-gray-50">
           <div className="flex items-center gap-3 mb-2">
             <Cpu className="w-5 h-5 text-indigo-600" />
             <h3 className="text-sm font-medium text-gray-600">Active GPUs</h3>
@@ -95,7 +95,7 @@ export default function Home() {
             {loading ? '-' : stats.totalGPUs}
           </p>
         </div>
-        <div className="border border-gray-300 rounded-lg p-6 bg-white">
+        <div className="rounded-xl p-6 bg-gray-50">
           <div className="flex items-center gap-3 mb-2">
             <DollarSign className="w-5 h-5 text-indigo-600" />
             <h3 className="text-sm font-medium text-gray-600">Total Apps</h3>
@@ -107,7 +107,7 @@ export default function Home() {
       </div>
 
       {/* Recent Apps */}
-      <div className="border border-gray-300 rounded-lg p-6 bg-white">
+      <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-serif font-semibold text-gray-900">
             Recent Applications
@@ -137,28 +137,28 @@ export default function Home() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-300">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                <tr>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
                     Name
                   </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
                     Status
                   </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
                     Tier
                   </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
                     GPUs
                   </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
                     Created
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {recentApps.map((app) => (
-                  <tr key={app.id} className="border-b border-gray-200 last:border-0">
-                    <td className="py-3 px-4">
+                  <tr key={app.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="py-4 px-4">
                       <Link
                         href={`/apps/${app.id}`}
                         className="text-gray-900 hover:text-indigo-600 font-medium"
@@ -166,16 +166,16 @@ export default function Home() {
                         {app.name || `${app.id.slice(0, 8)}...${app.id.slice(-4)}`}
                       </Link>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-4 px-4">
                       <StatusBadge status={app.status} />
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 bg-gray-100 rounded border border-gray-300 text-sm">
+                    <td className="py-4 px-4">
+                      <span className="px-2.5 py-1 bg-gray-100 rounded-md text-sm text-gray-700">
                         {app.tier}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-gray-900">{app.gpu_count}</td>
-                    <td className="py-3 px-4 text-gray-600 text-sm">
+                    <td className="py-4 px-4 text-gray-900">{app.gpu_count}</td>
+                    <td className="py-4 px-4 text-gray-500 text-sm">
                       {formatDate(app.created_at)}
                     </td>
                   </tr>

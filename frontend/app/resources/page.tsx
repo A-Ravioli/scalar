@@ -56,7 +56,7 @@ export default function ResourcesPage() {
 
       {/* Error Message */}
       {error && (
-        <div className="border border-red-300 rounded-lg p-4 bg-red-50 text-red-800 mb-6">
+        <div className="rounded-xl p-4 bg-red-50 text-red-800 mb-6">
           {error}
         </div>
       )}
@@ -71,7 +71,7 @@ export default function ResourcesPage() {
         <>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="border border-gray-300 rounded-lg p-6 bg-white">
+            <div className="rounded-xl p-6 bg-gray-50">
               <div className="flex items-center gap-3 mb-2">
                 <Server className="w-5 h-5 text-indigo-600" />
                 <h3 className="text-sm font-medium text-gray-600">Total Nodes</h3>
@@ -81,7 +81,7 @@ export default function ResourcesPage() {
               </p>
             </div>
 
-            <div className="border border-gray-300 rounded-lg p-6 bg-white">
+            <div className="rounded-xl p-6 bg-gray-50">
               <div className="flex items-center gap-3 mb-2">
                 <Cpu className="w-5 h-5 text-indigo-600" />
                 <h3 className="text-sm font-medium text-gray-600">Total GPUs</h3>
@@ -91,7 +91,7 @@ export default function ResourcesPage() {
               </p>
             </div>
 
-            <div className="border border-gray-300 rounded-lg p-6 bg-white">
+            <div className="rounded-xl p-6 bg-gray-50">
               <div className="flex items-center gap-3 mb-2">
                 <HardDrive className="w-5 h-5 text-green-600" />
                 <h3 className="text-sm font-medium text-gray-600">Available GPUs</h3>
@@ -101,7 +101,7 @@ export default function ResourcesPage() {
               </p>
             </div>
 
-            <div className="border border-gray-300 rounded-lg p-6 bg-white">
+            <div className="rounded-xl p-6 bg-gray-50">
               <div className="flex items-center gap-3 mb-2">
                 <Cpu className="w-5 h-5 text-orange-600" />
                 <h3 className="text-sm font-medium text-gray-600">Utilization</h3>
@@ -113,7 +113,7 @@ export default function ResourcesPage() {
           </div>
 
           {/* Capacity Breakdown */}
-          <div className="border border-gray-300 rounded-lg p-6 bg-white mb-8">
+          <div className="rounded-xl p-6 bg-gray-50 mb-8">
             <h2 className="text-2xl font-serif font-semibold text-gray-900 mb-6">
               Capacity Breakdown
             </h2>
@@ -190,7 +190,7 @@ export default function ResourcesPage() {
           </div>
 
           {/* Info Box */}
-          <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
+          <div className="rounded-xl p-6 bg-gray-50">
             <h3 className="font-semibold text-gray-900 mb-2">About Capacity</h3>
             <p className="text-sm text-gray-600 mb-2">
               This page shows the current capacity across all compute nodes in the cluster.
@@ -209,7 +209,7 @@ export default function ResourcesPage() {
           </div>
         </>
       ) : (
-        <div className="text-center py-12 border border-gray-300 rounded-lg bg-white">
+        <div className="text-center py-12 rounded-xl bg-gray-50">
           <p className="text-gray-600">No capacity data available</p>
         </div>
       )}

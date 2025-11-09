@@ -16,6 +16,8 @@ services:
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
       - REDIS_URL=redis://redis:6379
+      - SF_API_KEY=${SF_API_KEY}
+      - SF_API_URL=${SF_API_URL}
     depends_on:
       - redis
 

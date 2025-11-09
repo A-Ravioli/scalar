@@ -35,7 +35,7 @@ export function AppCard({ app, onDelete }: AppCardProps) {
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg p-6 bg-white hover:border-gray-400 transition-colors">
+    <div className="rounded-xl p-6 bg-gray-50 hover:bg-gray-100 transition-colors">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
@@ -45,11 +45,11 @@ export function AppCard({ app, onDelete }: AppCardProps) {
             <StatusBadge status={app.status} />
           </div>
           <div className="flex items-center gap-4 text-sm text-gray-600">
-            <span className="px-2 py-0.5 bg-gray-100 rounded border border-gray-300">
+            <span className="px-2.5 py-1 bg-white rounded-md">
               {app.tier}
             </span>
             <span>{app.gpu_count} GPU{app.gpu_count !== 1 ? 's' : ''}</span>
-            <span>{formatDate(app.created_at)}</span>
+            <span className="text-gray-500">{formatDate(app.created_at)}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export function AppCard({ app, onDelete }: AppCardProps) {
         <p className="font-mono">{truncateImage(app.image)}</p>
       </div>
       {app.node_id && (
-        <div className="mt-3 pt-3 border-t border-gray-200 text-xs text-gray-500">
+        <div className="mt-3 pt-3 text-xs text-gray-500">
           Node: {truncateId(app.node_id)}
           {app.gpu_indices && ` • GPUs: ${app.gpu_indices.join(', ')}`}
         </div>

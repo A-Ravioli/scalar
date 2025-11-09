@@ -167,7 +167,7 @@ export default function OrderbookPage() {
       </div>
 
       {/* Input Form */}
-      <div className="border border-gray-300 rounded-lg p-6 bg-white mb-6">
+      <div className="rounded-xl p-6 bg-gray-50 mb-6">
         <form onSubmit={handleSubmit} className="flex gap-4 items-end">
           <div className="flex-1">
             <label
@@ -180,7 +180,7 @@ export default function OrderbookPage() {
               id="instanceType"
               value={instanceType}
               onChange={(e) => setInstanceType(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2.5 bg-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             >
               <option value="8xH100">8xH100</option>
               <option value="8xA100">8xA100</option>
@@ -201,13 +201,13 @@ export default function OrderbookPage() {
               max="100"
               value={nodeCount}
               onChange={(e) => setNodeCount(parseInt(e.target.value) || 1)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2.5 bg-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? 'Loading...' : 'Fetch Orderbook'}
           </button>
@@ -216,7 +216,7 @@ export default function OrderbookPage() {
 
       {/* Error Message */}
       {error && (
-        <div className="border border-red-300 rounded-lg p-4 bg-red-50 mb-6 flex items-start gap-3">
+        <div className="rounded-xl p-4 bg-red-50 mb-6 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
           <div>
             <p className="text-red-900 font-medium">Error loading orderbook</p>
@@ -229,28 +229,28 @@ export default function OrderbookPage() {
       {orderbook && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="border border-gray-300 rounded-lg p-4 bg-white">
-              <div className="text-sm text-gray-600 mb-1">Spread</div>
+            <div className="rounded-xl p-4 bg-gray-50">
+              <div className="text-sm text-gray-500 mb-1">Spread</div>
               <div className="text-2xl font-bold text-gray-900">
                 {orderbook.spread !== null
                   ? formatPrice(orderbook.spread)
                   : 'N/A'}
               </div>
             </div>
-            <div className="border border-gray-300 rounded-lg p-4 bg-white">
-              <div className="text-sm text-gray-600 mb-1">Required GPUs</div>
+            <div className="rounded-xl p-4 bg-gray-50">
+              <div className="text-sm text-gray-500 mb-1">Required GPUs</div>
               <div className="text-2xl font-bold text-gray-900">
                 {orderbook.metadata.required_gpus}
               </div>
             </div>
-            <div className="border border-gray-300 rounded-lg p-4 bg-white">
-              <div className="text-sm text-gray-600 mb-1">Ask Liquidity</div>
+            <div className="rounded-xl p-4 bg-gray-50">
+              <div className="text-sm text-gray-500 mb-1">Ask Liquidity</div>
               <div className="text-2xl font-bold text-red-600">
                 {orderbook.total_ask_liquidity} GPUs
               </div>
             </div>
-            <div className="border border-gray-300 rounded-lg p-4 bg-white">
-              <div className="text-sm text-gray-600 mb-1">Bid Liquidity</div>
+            <div className="rounded-xl p-4 bg-gray-50">
+              <div className="text-sm text-gray-500 mb-1">Bid Liquidity</div>
               <div className="text-2xl font-bold text-green-600">
                 {orderbook.total_bid_liquidity} GPUs
               </div>
@@ -259,7 +259,7 @@ export default function OrderbookPage() {
 
           {/* Optimal Price Recommendation */}
           {orderbook.optimal_price !== null && (
-            <div className="border border-green-300 rounded-lg p-6 bg-green-50 mb-6">
+            <div className="rounded-xl p-6 bg-green-50 mb-6">
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-green-600 rounded-lg">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -288,8 +288,8 @@ export default function OrderbookPage() {
           {/* Orderbook Tables */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Asks (Sellers) */}
-            <div className="border border-gray-300 rounded-lg bg-white overflow-hidden">
-              <div className="bg-red-50 border-b border-red-200 px-6 py-4">
+            <div className="rounded-xl bg-white overflow-hidden">
+              <div className="bg-red-50 px-6 py-4">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-red-600" />
                   <h2 className="text-lg font-semibold text-red-900">
@@ -308,8 +308,8 @@ export default function OrderbookPage() {
             </div>
 
             {/* Bids (Buyers) */}
-            <div className="border border-gray-300 rounded-lg bg-white overflow-hidden">
-              <div className="bg-green-50 border-b border-green-200 px-6 py-4">
+            <div className="rounded-xl bg-white overflow-hidden">
+              <div className="bg-green-50 px-6 py-4">
                 <div className="flex items-center gap-2">
                   <TrendingDown className="w-5 h-5 text-green-600" />
                   <h2 className="text-lg font-semibold text-green-900">
@@ -341,7 +341,7 @@ export default function OrderbookPage() {
 
       {/* Empty State */}
       {!loading && !orderbook && !error && (
-        <div className="text-center py-16 border border-gray-300 rounded-lg bg-white">
+        <div className="text-center py-16 rounded-xl bg-gray-50">
           <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600">
             Enter your requirements and fetch the orderbook to get started

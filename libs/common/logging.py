@@ -4,13 +4,18 @@ import logging
 import sys
 from typing import Optional
 
-from opentelemetry import trace
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
-    OTLPSpanExporter,
-)
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.sdk.resources import Resource
+try:
+    from opentelemetry import trace
+    from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
+        OTLPSpanExporter,
+    )
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
+    from opentelemetry.sdk.resources import Resource
+    HAS_OPENTELEMETRY = True
+except ImportError:
+    HAS_OPENTELEMETRY = False
+
 from libs.common.config import config
 
 
@@ -23,8 +28,8 @@ def setup_logging(service_name: str):
         handlers=[logging.StreamHandler(sys.stdout)],
     )
 
-    # Setup OpenTelemetry if endpoint provided
-    if config.otlp_endpoint:
+    # Setup OpenTelemetry if endpoint provided and package is available
+    if HAS_OPENTELEMETRY and config.otlp_endpoint:
         resource = Resource.create({"service.name": service_name})
         provider = TracerProvider(resource=resource)
         exporter = OTLPSpanExporter(endpoint=config.otlp_endpoint)

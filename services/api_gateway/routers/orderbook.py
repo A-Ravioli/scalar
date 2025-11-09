@@ -6,18 +6,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from libs.common.logging import get_logger
+from libs.common.sfcompute_client import SFComputeClient
 from routers.auth import verify_api_key
-import sys
-import os
-
-# Add capacity_manager to path for SFComputeClient import
-_capacity_manager_path = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '..', '..', 'capacity_manager')
-)
-if _capacity_manager_path not in sys.path:
-    sys.path.insert(0, _capacity_manager_path)
-
-from sfcompute_client import SFComputeClient
 
 logger = get_logger(__name__)
 router = APIRouter()
@@ -124,7 +114,6 @@ def calculate_optimal_price(
 async def get_orderbook(
     instance_type: str = Query(..., description="Instance type (e.g., '8xH100')"),
     node_count: int = Query(1, ge=1, description="Number of nodes needed"),
-    user_id: UUID = Depends(verify_api_key),
 ):
     """
     Get orderbook for an instance type with optimal price recommendation.

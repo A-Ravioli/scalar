@@ -11,19 +11,19 @@ export function TierSelector({ selected, onChange }: TierSelectorProps) {
     value: Tier;
     label: string;
     description: string;
-    icon: React.ReactNode;
+    Icon: React.ComponentType<{ className?: string }>;
   }> = [
     {
       value: 'FAST',
       label: 'Fast',
       description: 'Low latency (seconds), higher cost, warm capacity',
-      icon: <Zap className="w-5 h-5 text-indigo-600" />,
+      Icon: Zap,
     },
     {
       value: 'FLEX',
       label: 'Flex',
       description: 'Accepts delays (hours), lower cost, just-in-time capacity',
-      icon: <Clock className="w-5 h-5 text-indigo-600" />,
+      Icon: Clock,
     },
   ];
 
@@ -34,19 +34,29 @@ export function TierSelector({ selected, onChange }: TierSelectorProps) {
           key={tier.value}
           type="button"
           onClick={() => onChange(tier.value)}
-          className={`text-left p-6 rounded-lg border-2 transition-all ${
+          className={`text-left p-6 rounded-lg transition-all ${
             selected === tier.value
-              ? 'border-indigo-600 bg-indigo-50'
-              : 'border-gray-300 bg-white hover:border-gray-400'
+              ? 'bg-indigo-600 text-white'
+              : 'bg-white hover:bg-gray-100'
           }`}
         >
           <div className="flex items-start gap-3">
-            <div className="mt-1">{tier.icon}</div>
+            <div className="mt-1">
+              <tier.Icon className={`w-5 h-5 ${
+                selected === tier.value ? 'text-white' : 'text-indigo-600'
+              }`} />
+            </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              <h3 className={`text-lg font-semibold mb-1 ${
+                selected === tier.value ? 'text-white' : 'text-gray-900'
+              }`}>
                 {tier.label}
               </h3>
-              <p className="text-sm text-gray-600">{tier.description}</p>
+              <p className={`text-sm ${
+                selected === tier.value ? 'text-indigo-100' : 'text-gray-600'
+              }`}>
+                {tier.description}
+              </p>
             </div>
           </div>
         </button>

@@ -80,7 +80,7 @@ export default function AppDetailPage({ params }: { params: { id: string } }) {
   if (error || !app) {
     return (
       <div className="max-w-5xl mx-auto px-8 py-12">
-        <div className="border border-red-300 rounded-lg p-6 bg-red-50 text-red-800">
+        <div className="rounded-xl p-6 bg-red-50 text-red-800">
           {error || 'Application not found'}
         </div>
         <Link
@@ -120,38 +120,38 @@ export default function AppDetailPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Overview Card */}
-      <div className="border border-gray-300 rounded-lg p-6 bg-white mb-6">
+      <div className="rounded-xl p-6 bg-gray-50 mb-6">
         <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
           Overview
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div>
-            <p className="text-sm text-gray-600 mb-1">Tier</p>
+            <p className="text-sm text-gray-500 mb-1">Tier</p>
             <p className="text-gray-900 font-medium">
-              <span className="px-2 py-0.5 bg-gray-100 rounded border border-gray-300">
+              <span className="px-2.5 py-1 bg-white rounded-md">
                 {app.tier}
               </span>
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">GPU Count</p>
+            <p className="text-sm text-gray-500 mb-1">GPU Count</p>
             <p className="text-gray-900 font-medium">{app.gpu_count}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">VRAM per GPU</p>
+            <p className="text-sm text-gray-500 mb-1">VRAM per GPU</p>
             <p className="text-gray-900 font-medium">{app.vram_per_gpu_gb} GB</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">CPU Cores</p>
+            <p className="text-sm text-gray-500 mb-1">CPU Cores</p>
             <p className="text-gray-900 font-medium">{app.cpu_cores}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">RAM</p>
+            <p className="text-sm text-gray-500 mb-1">RAM</p>
             <p className="text-gray-900 font-medium">{app.ram_gb} GB</p>
           </div>
           {app.status === 'running' && (
             <div>
-              <p className="text-sm text-gray-600 mb-1">Runtime</p>
+              <p className="text-sm text-gray-500 mb-1">Runtime</p>
               <p className="text-gray-900 font-medium">{getRuntime(app.created_at)}</p>
             </div>
           )}
@@ -159,33 +159,33 @@ export default function AppDetailPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Configuration Card */}
-      <div className="border border-gray-300 rounded-lg p-6 bg-white mb-6">
+      <div className="rounded-xl p-6 bg-gray-50 mb-6">
         <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
           Configuration
         </h2>
         <div className="space-y-4">
           <div>
-            <p className="text-sm text-gray-600 mb-1">Docker Image</p>
-            <p className="text-gray-900 font-mono text-sm bg-gray-50 px-3 py-2 rounded border border-gray-300">
+            <p className="text-sm text-gray-500 mb-1">Docker Image</p>
+            <p className="text-gray-900 font-mono text-sm bg-white px-4 py-2.5 rounded-lg">
               {app.image}
             </p>
           </div>
           {app.command && (
             <div>
-              <p className="text-sm text-gray-600 mb-1">Command</p>
-              <p className="text-gray-900 font-mono text-sm bg-gray-50 px-3 py-2 rounded border border-gray-300">
+              <p className="text-sm text-gray-500 mb-1">Command</p>
+              <p className="text-gray-900 font-mono text-sm bg-white px-4 py-2.5 rounded-lg">
                 {JSON.stringify(app.command)}
               </p>
             </div>
           )}
           {app.env && Object.keys(app.env).length > 0 && (
             <div>
-              <p className="text-sm text-gray-600 mb-2">Environment Variables</p>
+              <p className="text-sm text-gray-500 mb-2">Environment Variables</p>
               <div className="space-y-1">
                 {Object.entries(app.env).map(([key, value]) => (
                   <div
                     key={key}
-                    className="font-mono text-sm bg-gray-50 px-3 py-2 rounded border border-gray-300"
+                    className="font-mono text-sm bg-white px-4 py-2.5 rounded-lg"
                   >
                     <span className="text-indigo-600">{key}</span>
                     <span className="text-gray-600">=</span>
@@ -200,18 +200,18 @@ export default function AppDetailPage({ params }: { params: { id: string } }) {
 
       {/* Allocation Card (if running) */}
       {app.node_id && (
-        <div className="border border-gray-300 rounded-lg p-6 bg-white mb-6">
+        <div className="rounded-xl p-6 bg-gray-50 mb-6">
           <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
             Allocation
           </h2>
           <div className="space-y-3">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Node ID</p>
+              <p className="text-sm text-gray-500 mb-1">Node ID</p>
               <p className="text-gray-900 font-mono text-sm">{app.node_id}</p>
             </div>
             {app.gpu_indices && (
               <div>
-                <p className="text-sm text-gray-600 mb-1">GPU Indices</p>
+                <p className="text-sm text-gray-500 mb-1">GPU Indices</p>
                 <p className="text-gray-900 font-mono text-sm">
                   {app.gpu_indices.join(', ')}
                 </p>
@@ -222,17 +222,17 @@ export default function AppDetailPage({ params }: { params: { id: string } }) {
       )}
 
       {/* Timestamps Card */}
-      <div className="border border-gray-300 rounded-lg p-6 bg-white mb-6">
+      <div className="rounded-xl p-6 bg-gray-50 mb-6">
         <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
           Timeline
         </h2>
         <div className="space-y-3">
           <div>
-            <p className="text-sm text-gray-600 mb-1">Created</p>
+            <p className="text-sm text-gray-500 mb-1">Created</p>
             <p className="text-gray-900 text-sm">{formatDate(app.created_at)}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">Last Updated</p>
+            <p className="text-sm text-gray-500 mb-1">Last Updated</p>
             <p className="text-gray-900 text-sm">{formatDate(app.updated_at)}</p>
           </div>
         </div>
@@ -241,7 +241,7 @@ export default function AppDetailPage({ params }: { params: { id: string } }) {
       {/* Actions */}
       <div className="flex gap-4">
         <button
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors disabled:opacity-50"
           title="View logs (coming soon)"
           disabled
         >
@@ -250,7 +250,7 @@ export default function AppDetailPage({ params }: { params: { id: string } }) {
         </button>
         <button
           onClick={handleDelete}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium border border-red-300 text-red-700 hover:bg-red-50 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
         >
           <Trash2 className="w-5 h-5" />
           Delete Application

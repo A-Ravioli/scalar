@@ -156,7 +156,7 @@ export default function DeployPage() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* App Details */}
-        <div className="border border-gray-300 rounded-lg p-6 bg-white">
+        <div className="rounded-xl p-6 bg-gray-50">
           <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
             Application Details
           </h2>
@@ -169,14 +169,14 @@ export default function DeployPage() {
               required
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="w-full bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               placeholder="my-training-job"
             />
           </div>
         </div>
 
         {/* Tier Selection */}
-        <div className="border border-gray-300 rounded-lg p-6 bg-white">
+        <div className="rounded-xl p-6 bg-gray-50">
           <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
             Compute Tier
           </h2>
@@ -187,7 +187,7 @@ export default function DeployPage() {
         </div>
 
         {/* Resource Configuration */}
-        <div className="border border-gray-300 rounded-lg p-6 bg-white">
+        <div className="rounded-xl p-6 bg-gray-50">
           <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
             Resource Configuration
           </h2>
@@ -203,10 +203,10 @@ export default function DeployPage() {
                     key={preset}
                     type="button"
                     onClick={() => setFormData({ ...formData, gpu_count: preset })}
-                    className={`px-4 py-2 rounded-md border transition-colors ${
+                    className={`px-4 py-2 rounded-lg transition-colors ${
                       formData.gpu_count === preset
-                        ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     {preset}
@@ -220,7 +220,7 @@ export default function DeployPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, gpu_count: parseInt(e.target.value) })
                 }
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="w-full bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
 
@@ -237,7 +237,7 @@ export default function DeployPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, vram_per_gpu_gb: parseFloat(e.target.value) })
                 }
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="w-full bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
 
@@ -253,7 +253,7 @@ export default function DeployPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, cpu_cores: parseInt(e.target.value) })
                 }
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="w-full bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
 
@@ -270,14 +270,14 @@ export default function DeployPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, ram_gb: parseFloat(e.target.value) })
                 }
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="w-full bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
           </div>
         </div>
 
         {/* Container Configuration */}
-        <div className="border border-gray-300 rounded-lg p-6 bg-white">
+        <div className="rounded-xl p-6 bg-gray-50">
           <h2 className="text-xl font-serif font-semibold text-gray-900 mb-4">
             Container Setup
           </h2>
@@ -287,10 +287,10 @@ export default function DeployPage() {
             <button
               type="button"
               onClick={() => setContainerMode('manual')}
-              className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+              className={`flex-1 px-4 py-3 rounded-lg transition-all ${
                 containerMode === 'manual'
-                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                  : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}
             >
               <div className="font-medium">Docker Image</div>
@@ -299,10 +299,10 @@ export default function DeployPage() {
             <button
               type="button"
               onClick={() => setContainerMode('upload')}
-              className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+              className={`flex-1 px-4 py-3 rounded-lg transition-all ${
                 containerMode === 'upload'
-                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                  : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}
             >
               <div className="font-medium">Upload Container</div>
@@ -311,10 +311,10 @@ export default function DeployPage() {
             <button
               type="button"
               onClick={useDemoContainer}
-              className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+              className={`flex-1 px-4 py-3 rounded-lg transition-all ${
                 containerMode === 'demo'
-                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                  : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}
             >
               <div className="flex items-center justify-center gap-1 font-medium">
@@ -337,7 +337,7 @@ export default function DeployPage() {
                   required
                   value={formData.image}
                   onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="w-full bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                   placeholder="nvidia/cuda:11.8.0-base-ubuntu22.04"
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -357,12 +357,12 @@ export default function DeployPage() {
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
+                  className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
                     isDragging
                       ? 'border-indigo-600 bg-indigo-50'
                       : uploadedFile
                       ? 'border-green-400 bg-green-50'
-                      : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
                   }`}
                 >
                   {uploadedFile ? (
@@ -411,7 +411,7 @@ export default function DeployPage() {
 
             {/* Demo Container Info */}
             {containerMode === 'demo' && (
-              <div className="border border-indigo-200 rounded-lg p-4 bg-indigo-50">
+              <div className="rounded-xl p-4 bg-indigo-50">
                 <div className="flex items-start gap-3">
                   <Sparkles className="w-5 h-5 text-indigo-600 mt-0.5 flex-shrink-0" />
                   <div>
@@ -438,7 +438,7 @@ export default function DeployPage() {
                 type="text"
                 value={formData.command}
                 onChange={(e) => setFormData({ ...formData, command: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="w-full bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 placeholder='["python", "train.py"] or python, train.py'
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -458,14 +458,14 @@ export default function DeployPage() {
                       type="text"
                       value={envVar.key}
                       onChange={(e) => handleEnvChange(index, 'key', e.target.value)}
-                      className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      className="flex-1 bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                       placeholder="KEY"
                     />
                     <input
                       type="text"
                       value={envVar.value}
                       onChange={(e) => handleEnvChange(index, 'value', e.target.value)}
-                      className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      className="flex-1 bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                       placeholder="value"
                     />
                     <button
@@ -492,7 +492,7 @@ export default function DeployPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="border border-red-300 rounded-lg p-4 bg-red-50 text-red-800">
+          <div className="rounded-xl p-4 bg-red-50 text-red-800">
             {error}
           </div>
         )}
@@ -502,7 +502,7 @@ export default function DeployPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-3 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+            className="px-6 py-3 rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
           >
             Cancel
           </button>

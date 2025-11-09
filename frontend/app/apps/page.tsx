@@ -86,15 +86,15 @@ export default function AppsPage() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-gray-300">
+      <div className="flex gap-2 mb-6">
         {filterTabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setFilter(tab.key)}
-            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               filter === tab.key
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             {tab.label}
@@ -104,7 +104,7 @@ export default function AppsPage() {
 
       {/* Error Message */}
       {error && (
-        <div className="border border-red-300 rounded-lg p-4 bg-red-50 text-red-800 mb-6">
+        <div className="rounded-xl p-4 bg-red-50 text-red-800 mb-6">
           {error}
         </div>
       )}
@@ -116,7 +116,7 @@ export default function AppsPage() {
           <p className="mt-4 text-gray-600">Loading applications...</p>
         </div>
       ) : apps.length === 0 ? (
-        <div className="text-center py-12 border border-gray-300 rounded-lg bg-white">
+        <div className="text-center py-12 rounded-xl bg-gray-50">
           <p className="text-gray-600 mb-4">No applications found</p>
           <Link
             href="/deploy"
