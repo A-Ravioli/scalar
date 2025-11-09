@@ -10,7 +10,7 @@ postgrest==0.13.0
 psycopg2-binary==2.9.9
 
 # HTTP clients
-httpx==0.25.2
+httpx==0.24.1
 redis==5.0.1
 
 # Docker

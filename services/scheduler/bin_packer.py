@@ -1,10 +1,17 @@
-"""Bin-packing algorithm for job placement."""
+"""Bin-packing algorithm for job placement with provider awareness."""
 
 from typing import List, Optional, Tuple
 from libs.common.types import Job, Node, GPUAssignment, PlacementDecision, Tier
 from libs.common.config import config
 
 SAFETY_MARGIN_SEC = config.bin_pack_safety_margin_sec
+
+
+def get_node_provider(node: Node) -> str:
+    """Get provider name for a node from its block."""
+    if node._block:
+        return node._block.provider
+    return "sfcompute"  # Default
 
 
 def compute_score(
@@ -14,11 +21,13 @@ def compute_score(
     Score a node for placing a job.
 
     Higher score = better fit.
+    Considers provider characteristics to optimize placement.
     """
     # Weight factors
     w1 = 1.0  # Utilization weight
     w2 = -0.5  # Fragmentation penalty
     w3 = -0.3  # Time to expiry penalty
+    w4 = 0.2  # Provider affinity bonus
 
     # Calculate utilization after placing job
     total_vram = sum(g.vram_total_gb for g in node.gpu_slots)
@@ -44,10 +53,22 @@ def compute_score(
     if time_to_expiry < job.expected_duration_sec * 2:
         expiry_penalty = 1.0 - (time_to_expiry / (job.expected_duration_sec * 2))
 
+    # Provider affinity: prefer SFCompute for large jobs (>= 8 GPUs) to avoid fragmentation
+    # Prefer Prime for small jobs (< 8 GPUs) if available
+    provider = get_node_provider(node)
+    provider_bonus = 0.0
+    if job.gpu_count >= 8 and provider == "sfcompute":
+        # Large jobs fit better on SFCompute 8x nodes
+        provider_bonus = 0.2
+    elif job.gpu_count < 8 and provider == "prime":
+        # Small jobs fit better on Prime pods (exact match)
+        provider_bonus = 0.1
+
     score = (
         w1 * utilization
         + w2 * fragmentation
         + w3 * expiry_penalty
+        + w4 * provider_bonus
     )
 
     return score
@@ -90,14 +111,23 @@ def schedule_job(
             candidate_nodes.append((node, possible_gpus))
 
     if not candidate_nodes:
-        # No fit found, escalate
+        # No fit found, escalate with provider recommendation
+        preferred_provider = None
+        if job.gpu_count <= config.prime_max_gpus:
+            preferred_provider = "prime"
+        else:
+            preferred_provider = "sfcompute"
+
         if job.tier == Tier.FAST:
             return PlacementDecision(
-                kind="REQUEST_MORE_CAPACITY", tier=Tier.FAST, job_id=job.id
+                kind="REQUEST_MORE_CAPACITY",
+                tier=Tier.FAST,
+                job_id=job.id,
+                provider=preferred_provider,
             )
         else:
             return PlacementDecision(
-                kind="QUEUE_FOR_FLEX", job_id=job.id
+                kind="QUEUE_FOR_FLEX", job_id=job.id, provider=preferred_provider
             )
 
     # Score all candidates

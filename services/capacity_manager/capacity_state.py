@@ -33,9 +33,14 @@ class CapacityState:
 
         self.blocks = {}
         for block_data in blocks_result.data:
+            # Parse drain_deadline if present
+            drain_deadline = None
+            if block_data.get("drain_deadline"):
+                drain_deadline = datetime.fromisoformat(block_data["drain_deadline"])
+
             block = Block(
                 id=UUID(block_data["id"]),
-                provider=block_data["provider"],
+                provider=block_data.get("provider", "sfcompute"),
                 instance_type=block_data["instance_type"],
                 gpus_per_node=block_data["gpus_per_node"],
                 vram_per_gpu_gb=block_data["vram_per_gpu_gb"],
@@ -46,6 +51,10 @@ class CapacityState:
                 cost_per_hour=block_data["cost_per_hour"],
                 status=block_data["status"],
                 tier=Tier(block_data["tier"]) if block_data.get("tier") else None,
+                provider_instance_id=block_data.get("provider_instance_id"),
+                region=block_data.get("region"),
+                preemptible=block_data.get("preemptible", False),
+                drain_deadline=drain_deadline,
                 created_at=datetime.fromisoformat(block_data["created_at"]),
                 updated_at=datetime.fromisoformat(block_data["updated_at"]),
             )
@@ -96,6 +105,9 @@ class CapacityState:
                 created_at=datetime.fromisoformat(node_data["created_at"]),
                 updated_at=datetime.fromisoformat(node_data["updated_at"]),
             )
+            # Attach block reference for richer calculations
+            if block:
+                node.set_block(block)
             self.nodes[node.id] = node
 
         self.last_sync = datetime.utcnow()
@@ -103,7 +115,11 @@ class CapacityState:
 
     def get_capacity_snapshot(self, tier: Optional[Tier] = None) -> CapacitySnapshot:
         """Get current capacity snapshot."""
-        nodes = list(self.nodes.values())
+        # Only expose nodes whose blocks are active to the scheduler
+        active_block_ids = {
+            block_id for block_id, block in self.blocks.items() if block.status.value == "active"
+        }
+        nodes = [n for n in self.nodes.values() if n.block_id in active_block_ids]
         if tier:
             nodes = [n for n in nodes if n.tier == tier]
         return CapacitySnapshot(nodes=nodes, timestamp=datetime.utcnow())
