@@ -69,3 +69,33 @@ export interface ApiError {
   detail?: string;
 }
 
+export interface OrderbookEntry {
+  price: number;
+  quantity_gpus: number;
+  duration_hours: number;
+  cumulative_quantity?: number;
+}
+
+export interface OrderbookData {
+  instance_type: string;
+  asks: OrderbookEntry[];
+  bids: OrderbookEntry[];
+  optimal_price: number | null;
+  optimal_index: number | null;
+  spread: number | null;
+  total_ask_liquidity: number;
+  total_bid_liquidity: number;
+  last_updated: string;
+  metadata: {
+    required_gpus: number;
+    node_count: number;
+    gpus_per_node: number;
+    mock_data?: boolean;
+  };
+}
+
+export interface OrderbookRequest {
+  instance_type: string;
+  node_count: number;
+}
+

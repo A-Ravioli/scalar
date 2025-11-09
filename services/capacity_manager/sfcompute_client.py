@@ -133,11 +133,11 @@ class SFComputeClient:
         Returns current buy/sell orders.
         """
         async with httpx.AsyncClient() as client:
-            url = f"{self.api_url}/v1/marketplace/orderbook"
+            # SFCompute uses /v0/orders endpoint
+            url = f"{self.api_url}/v0/orders"
             response = await client.get(
                 url,
                 headers=self.base_headers,
-                params={"instance_type": instance_type},
                 timeout=30.0,
             )
             response.raise_for_status()

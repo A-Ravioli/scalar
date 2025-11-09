@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from libs.common.logging import setup_logging
 
-from routers import jobs, endpoints, auth
+from routers import jobs, endpoints, auth, orderbook
 
 logger = setup_logging("api_gateway")
 
@@ -25,6 +25,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(jobs.router, prefix="/jobs", tags=["jobs"])
 app.include_router(endpoints.router, prefix="/endpoints", tags=["endpoints"])
+app.include_router(orderbook.router, prefix="/orderbook", tags=["orderbook"])
 
 
 @app.get("/health")

@@ -43,6 +43,12 @@ function Navigation() {
               >
                 Resources
               </Link>
+              <Link
+                href="/orderbook"
+                className="text-gray-700 hover:text-gray-900 transition-colors"
+              >
+                Order Book
+              </Link>
             </div>
           </div>
           <div className="flex items-center gap-4">

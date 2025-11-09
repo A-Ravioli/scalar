@@ -2,7 +2,7 @@
  * API client for the Scalar compute platform
  */
 
-import { App, AppConfig, CapacitySnapshot, Node, Tier } from './types';
+import { App, AppConfig, CapacitySnapshot, Node, Tier, OrderbookData } from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY || '';
@@ -118,6 +118,20 @@ class ApiClient {
         nodes_count: 0,
       };
     });
+  }
+
+  /**
+   * Get orderbook for an instance type with optimal price recommendation
+   */
+  async getOrderbook(
+    instanceType: string,
+    nodeCount: number = 1
+  ): Promise<OrderbookData> {
+    const queryParams = new URLSearchParams({
+      instance_type: instanceType,
+      node_count: nodeCount.toString(),
+    });
+    return this.fetch<OrderbookData>(`/orderbook?${queryParams.toString()}`);
   }
 }
 
