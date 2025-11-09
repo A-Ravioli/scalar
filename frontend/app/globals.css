@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  /* SF Compute Design System */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Custom color palette */
+  --color-indigo-600: #4F46E5;
+  --color-indigo-700: #4338CA;
+  --color-gray-100: #F3F4F6;
+  --color-gray-300: #E5E7EB;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-900: #111827;
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Merriweather', Georgia, serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}

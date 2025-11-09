@@ -49,24 +49,23 @@ class Autoscaler:
         # Prime only supports 1-8 GPUs
         if gpu_count <= config.prime_max_gpus and "prime" in self.providers:
             # Get Prime quotes
-            try:
-                prime_quotes = await self.providers["prime"].get_price_quotes(
-                    gpu_count=gpu_count,
-                    vram_per_gpu_gb=vram_per_gpu_gb,
-                    cpu_cores=cpu_cores,
-                    ram_gb=ram_gb,
-                )
+            prime_quotes = await self.providers["prime"].get_price_quotes(
+                gpu_count=gpu_count,
+                vram_per_gpu_gb=vram_per_gpu_gb,
+                cpu_cores=cpu_cores,
+                ram_gb=ram_gb,
+            )
 
-                if prime_quotes:
-                    best_prime = prime_quotes[0]
-                    # Check price cap
-                    if best_prime.price_per_gpu_hour <= config.max_prime_price_per_gpu_hour:
-                        # Check startup SLA
-                        if best_prime.estimated_startup_sec <= config.prime_startup_sla_sec:
-                            logger.info(
-                                f"Selected Prime for {gpu_count} GPUs at ${best_prime.price_per_gpu_hour:.2f}/GPU-hr"
-                            )
-                            return self.providers["prime"], best_prime.instance_type
+            if prime_quotes:
+                best_prime = prime_quotes[0]
+                # Check price cap
+                if best_prime.price_per_gpu_hour <= config.max_prime_price_per_gpu_hour:
+                    # Check startup SLA
+                    if best_prime.estimated_startup_sec <= config.prime_startup_sla_sec:
+                        logger.info(
+                            f"Selected Prime for {gpu_count} GPUs at ${best_prime.price_per_gpu_hour:.2f}/GPU-hr"
+                        )
+                        return self.providers["prime"], best_prime.instance_type
 
         # For >= 8 GPUs or if Prime unavailable/too expensive, use SFCompute
         if gpu_count >= 8 and "sfcompute" in self.providers:
@@ -329,8 +328,6 @@ class Autoscaler:
                         candidates.append(
                             (cooldown, remaining_secs, block_id_str, total, block_obj.provider)
                         )
-                    except Exception:
-                        continue
 
             if not candidates:
                 logger.info("No idle FAST blocks available to terminate")
