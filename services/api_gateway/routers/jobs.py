@@ -21,6 +21,7 @@ router = APIRouter()
 class JobCreate(BaseModel):
     """Job creation request."""
 
+    name: str
     tier: Tier
     gpu_count: int
     vram_per_gpu_gb: float
@@ -69,6 +70,7 @@ async def create_job(
     result = supabase.table("jobs").insert({
         "id": str(job_id),
         "user_id": str(user_id),
+        "name": job.name,
         "tier": job.tier.value,
         "gpu_count": job.gpu_count,
         "vram_per_gpu_gb": job.vram_per_gpu_gb,

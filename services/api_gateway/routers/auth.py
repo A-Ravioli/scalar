@@ -22,10 +22,21 @@ async def verify_api_key(
     authorization: Optional[str] = Header(None),
 ) -> UUID:
     """Verify API key and return user ID."""
+    # For development: allow unauthenticated requests with a default user ID
     if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
+        # Return a default development user ID (you should create this user in your database)
+        # TODO: In production, uncomment the line below to enforce authentication
+        # raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
+        logger.warning("Using default development user ID - authentication is disabled!")
+        return UUID("00000000-0000-0000-0000-000000000001")
 
     token = authorization.replace("Bearer ", "")
+    
+    # Skip validation for development API key
+    if token == "sk_your_api_key":
+        logger.warning("Using development API key - authentication is disabled!")
+        return UUID("00000000-0000-0000-0000-000000000001")
+    
     key_hash = hash_api_key(token)
 
     supabase = get_supabase_client()

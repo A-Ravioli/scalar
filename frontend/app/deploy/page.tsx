@@ -137,7 +137,8 @@ export default function DeployPage() {
 
       router.push('/apps');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to deploy application');
+      console.error('Deployment error:', err);
+      setError(err instanceof Error ? err.message : JSON.stringify(err) || 'Failed to deploy application');
     } finally {
       setLoading(false);
     }

@@ -39,6 +39,14 @@ class ApiClient {
       const error = await response.json().catch(() => ({
         error: 'An error occurred',
       }));
+      // Handle validation errors (422) which return an array of errors
+      if (Array.isArray(error.detail)) {
+        const errorMessages = error.detail.map((e: any) => {
+          const field = e.loc?.[e.loc.length - 1] || 'unknown';
+          return `${field}: ${e.msg || JSON.stringify(e)}`;
+        }).join(', ');
+        throw new Error(errorMessages || 'Validation error');
+      }
       throw new Error(error.detail || error.error || 'An error occurred');
     }
 
@@ -52,6 +60,7 @@ class ApiClient {
     return this.fetch<App>('/jobs', {
       method: 'POST',
       body: JSON.stringify({
+        name: config.name,
         tier: config.tier,
         gpu_count: config.gpu_count,
         vram_per_gpu_gb: config.vram_per_gpu_gb,
